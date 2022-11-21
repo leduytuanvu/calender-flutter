@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,77 +10,395 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-int initMounth = 1;
-int initYear = 2000;
-int initDay = 5;
-int firstYear = 2000;
-int lastYear = 2100;
+int initMounth = DateTime.now().month;
+int initYear = DateTime.now().year;
+int initDay = DateTime.now().day;
+
+int realMonth = DateTime.now().month;
+int realYear = DateTime.now().year;
+int realDay = DateTime.now().day;
+
+int firstYear = 2021;
+int lastYear = 2025;
 int numberOfYear = lastYear - firstYear;
 int numberOfMounth = numberOfYear * 12;
-PageController controller = PageController();
 
-List<Widget> listWidget() {
-  List<Widget> list = [];
-  int tmp = 0;
+// Get day
+int getDay(int mounth, int year) {
   int day = 0;
-  int tmpYear = 2000;
-  for (int i = 0; i < numberOfMounth; i++) {
-    // log("$tmp TMP");
-    tmp++;
+  switch (mounth) {
+    case 1:
+      day = 31;
+      break;
+    case 2:
+      if (year % 100 == 0) {
+        if (year % 400 == 0) {
+          day = 29;
+        } else {
+          day = 28;
+        }
+      } else {
+        if (year % 4 == 0) {
+          day = 29;
+        } else {
+          day = 28;
+        }
+      }
+      break;
+    case 3:
+      day = 31;
+      break;
+    case 4:
+      day = 30;
+      break;
+    case 5:
+      day = 31;
+      break;
+    case 6:
+      day = 30;
+      break;
+    case 7:
+      day = 31;
+      break;
+    case 8:
+      day = 31;
+      break;
+    case 9:
+      day = 30;
+      break;
+    case 10:
+      day = 31;
+      break;
+    case 11:
+      day = 30;
+      break;
+    case 12:
+      day = 31;
+      break;
+  }
+  return day;
+}
 
-    if (tmp == 13) {
-      tmp = 1;
-      tmpYear++;
+List<Widget> getChildrenGridView(int month, int day, int year) {
+  List<Widget> children = [];
+
+  int thu = 0;
+  if (month < 10) {}
+  final dateName = DateFormat('E')
+      .format(DateTime.parse("$year-${month < 10 ? '0$month' : month}-01"));
+  // log("$dateName=============================");
+  switch (dateName.toLowerCase()) {
+    case "sun":
+      thu = 1;
+      break;
+    case "mon":
+      thu = 2;
+      break;
+    case "tue":
+      thu = 3;
+      break;
+    case "wed":
+      thu = 4;
+      break;
+    case "thu":
+      thu = 5;
+      break;
+    case "fri":
+      thu = 6;
+      break;
+    case "sat":
+      thu = 1;
+      break;
+  }
+  // log("$thu thuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+  // log("$thu THU");
+  day = day + thu;
+
+  for (int i = 1; i < day; i++) {
+    if (i < thu) {
+      children.add(const SizedBox());
+    } else {
+      if (year < realYear) {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 11.0, vertical: 7),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Center(
+                child: Text(
+                  '${i - thu + 1}',
+                  style: const TextStyle(
+                    fontSize: 16.5,
+                    color: Colors.white,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      } else if (year == realYear) {
+        if (month < realMonth) {
+          children.add(
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 11.0, vertical: 7),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Center(
+                  child: Text(
+                    '${i - thu + 1}',
+                    style: const TextStyle(
+                      fontSize: 16.5,
+                      color: Colors.white,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else if (month > realMonth) {
+          children.add(
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 11.0, vertical: 7),
+              child: Container(
+                child: Center(
+                  child: Text(
+                    '${i - thu + 1}',
+                    style: const TextStyle(
+                      fontSize: 16.5,
+                      color: Colors.white,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          if (i - thu + 1 < realDay) {
+            children.add(
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 11.0, vertical: 7),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${i - thu + 1}',
+                      style: const TextStyle(
+                        fontSize: 16.5,
+                        color: Colors.white,
+                        // fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else if (i - thu + 1 > realDay) {
+            children.add(
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 11.0, vertical: 7),
+                child: Container(
+                  child: Center(
+                    child: Text(
+                      '${i - thu + 1}',
+                      style: const TextStyle(
+                        fontSize: 16.5,
+                        color: Colors.white,
+                        // fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            children.add(
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 11.0, vertical: 7),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${i - thu + 1}',
+                      style: const TextStyle(
+                        fontSize: 16.5,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
+        }
+      } else {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 11.0, vertical: 7),
+            child: Container(
+              child: Center(
+                child: Text(
+                  '${i - thu + 1}',
+                  style: const TextStyle(
+                    fontSize: 16.5,
+                    color: Colors.white,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }
     }
-    switch (tmp) {
-      case 1:
-        day = 31;
-        break;
-      case 2:
-        day = 28;
-        break;
-      case 3:
-        day = 31;
-        break;
-      case 4:
-        day = 30;
-        break;
-      case 5:
-        day = 31;
-        break;
-      case 6:
-        day = 30;
-        break;
-      case 7:
-        day = 31;
-        break;
-      case 8:
-        day = 31;
-        break;
-      case 9:
-        day = 30;
-        break;
-      case 10:
-        day = 31;
-        break;
-      case 11:
-        day = 30;
-        break;
-      case 12:
-        day = 31;
-        break;
+  }
+  return children;
+}
+
+Widget getCircle(int thu, int day, int month, int year) {
+  bool checkk = false;
+  if (year > realYear) {
+  } else if (year == realYear) {
+    if (month > realMonth) {
+    } else if (month < realMonth) {
+      check = true;
+    } else {
+      if (day > realDay) {
+      } else if (day < realDay) {
+        check = true;
+      } else {
+        check = true;
+      }
+    }
+  } else {
+    check = true;
+  }
+  return Padding(
+    padding: const EdgeInsets.all(10.0),
+    child: Container(
+      decoration: check
+          ? BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(100),
+            )
+          : null,
+      height: 32,
+      width: 32,
+      child: Center(
+        child: Text(
+          "$thu",
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+List<Widget> listWidgetChild() {
+  List<Widget> list = [];
+  int day = getDay(initMounth, initYear);
+
+  int thu = 0;
+  if (initMounth < 10) {}
+  final dateName = DateFormat('E').format(DateTime.parse(
+      "$initYear-${initMounth < 10 ? '0$initMounth' : initMounth}-01"));
+  switch (dateName.toLowerCase()) {
+    case "sun":
+      thu = 1;
+      break;
+    case "mon":
+      thu = 2;
+      break;
+    case "tue":
+      thu = 3;
+      break;
+    case "wed":
+      thu = 4;
+      break;
+    case "thu":
+      thu = 5;
+      break;
+    case "fri":
+      thu = 6;
+      break;
+    case "sat":
+      thu = 1;
+      break;
+  }
+  day = day + thu;
+
+  int count = 0;
+  for (int i = 0; i < 5; i++) {
+    List<Widget> listTmp = [];
+    int count2 = 1;
+    int monthBefore = 0;
+    int yearBefore = 0;
+    if (monthBefore == 1) {
+      monthBefore = 12;
+      yearBefore = initYear - 1;
+    } else {
+      monthBefore = initMounth - 1;
+      yearBefore = initYear;
+    }
+    int day2 = getDay(monthBefore, yearBefore);
+    for (int j = 0; j < 7; j++) {
+      count++;
+
+      if (count >= day) {
+        // listTmp.add(
+        //   Padding(
+        //     padding: const EdgeInsets.all(10.0),
+        //     child: SizedBox(
+        //       height: 32,
+        //       width: 32,
+        //       child: Center(
+        //         child: Text(
+        //           "$count2",
+        //           style: TextStyle(
+        //             color: Colors.grey.shade400,
+        //             fontWeight: FontWeight.bold,
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // );
+        listTmp.add(getCircle(count2, count, initMounth, initYear));
+        count2++;
+      } else {
+        if (count < thu) {
+          listTmp.add(
+              getCircle(day2 - thu + count + 1, count, initMounth, initYear));
+        } else {
+          listTmp.add(getCircle(count - thu + 1, count, initMounth, initYear));
+        }
+      }
     }
     list.add(
       SizedBox(
-        // height: 100,
-        // color: Colors.grey,
-        // child: Text(
-        //   'Mounth ${i + 1} Year ${firstYear + i ~/ 12}',
-        //   style: const TextStyle(
-        //     fontSize: 20,
-        //     color: Colors.white,
-        //   ),
-        // ),
         child: GridView(
           padding: EdgeInsets.zero,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -87,29 +406,42 @@ List<Widget> listWidget() {
             crossAxisSpacing: 0,
             mainAxisSpacing: 0,
           ),
+          children: [...listTmp],
+        ),
+        // child: Row(),
+      ),
+    );
+  }
+  return list;
+}
+
+List<Widget> listWidget() {
+  List<Widget> list = [];
+  int tmpMonth = 0;
+  int tmpDay = 0;
+  int tmpYear = firstYear;
+  for (int i = 0; i < numberOfMounth; i++) {
+    tmpMonth++;
+
+    if (tmpMonth == 13) {
+      tmpMonth = 1;
+      tmpYear++;
+    }
+
+    tmpDay = getDay(tmpMonth, tmpYear);
+
+    list.add(
+      SizedBox(
+        child: GridView(
+          padding: EdgeInsets.zero,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 7,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
+            mainAxisExtent: 53,
+          ),
           children: [
-            for (int j = 0; j < day; j++) ...{
-              if (tmp == initMounth && tmpYear == initYear && initDay == j)
-                Padding(
-                  padding: const EdgeInsets.all(9.5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${j + 1}',
-                        style: const TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            }
+            ...getChildrenGridView(tmpMonth, tmpDay, tmpYear),
           ],
         ),
         // child: Row(),
@@ -119,14 +451,16 @@ List<Widget> listWidget() {
   return list;
 }
 
+PageController controller = PageController();
+PageController controllerChild = PageController();
+bool check = true;
+
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // controller = PageController(
-    //   initialPage:
-    //       numberOfMounth - (lastYear - initYear) * 12 - (12 - initMounth),
-    // );
+    controller = PageController(
+        initialPage: (realYear - firstYear) * 12 + realMonth - 1);
   }
 
   @override
@@ -135,7 +469,8 @@ class _HomeScreenState extends State<HomeScreen> {
     bool snap = false;
     bool floating = false;
     final size = MediaQuery.of(context).size;
-
+    controller = PageController(
+        initialPage: (realYear - firstYear) * 12 + realMonth - 1);
     return Scaffold(
       backgroundColor: const Color(0xFFFCF9FC),
       body: CustomScrollView(
@@ -189,7 +524,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Container(
                       transform: Matrix4.translationValues(0, -1, 0),
-                      height: size.height * 0.57,
+                      height: check ? size.height * 0.57 : size.height * 0.19,
                       width: double.infinity,
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
@@ -207,95 +542,100 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 18,
-                            ),
-                            child: Row(
-                              children: [
-                                InkWell(
-                                  onTap: (() {
-                                    setState(() {
-                                      if (initYear == firstYear &&
-                                          initMounth == 1) {
-                                      } else {
-                                        initMounth--;
-                                        if (initMounth < 1) {
-                                          initMounth = 12;
-                                          initYear--;
-                                        }
-                                      }
+                          check
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 18,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: (() {
+                                          setState(() {
+                                            if (initYear == firstYear &&
+                                                initMounth == 1) {
+                                            } else {
+                                              initMounth--;
+                                              if (initMounth < 1) {
+                                                initMounth = 12;
+                                                initYear--;
+                                              }
+                                            }
+                                            // controller = PageController(
+                                            //     initialPage: (initYear - 2000) * 12 +
+                                            //         initMounth -
+                                            //         1);
 
-                                      // controller.animateToPage(
-                                      //   initMounth +
-                                      //       (initYear - firstYear) *
-                                      //           numberOfMounth,
-                                      //   duration:
-                                      //       const Duration(milliseconds: 300),
-                                      //   curve: Curves.easeInOut,
-                                      // );
-                                    });
-                                  }),
-                                  child: Container(
-                                    height: 40,
-                                    width: 40,
-                                    color: Colors.transparent,
-                                    child: const Icon(
-                                      Icons.arrow_back_ios,
-                                      color: Colors.white,
-                                    ),
+                                            controller.animateToPage(
+                                              (initYear - firstYear) * 12 +
+                                                  initMounth -
+                                                  1,
+                                              duration: const Duration(
+                                                  milliseconds: 400),
+                                              curve: Curves.easeInOut,
+                                            );
+                                          });
+                                        }),
+                                        child: Container(
+                                          height: 40,
+                                          width: 40,
+                                          color: Colors.transparent,
+                                          child: const Icon(
+                                            Icons.arrow_back_ios,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        "Tháng $initMounth - $initYear",
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17.5,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      InkWell(
+                                        onTap: (() {
+                                          setState(() {
+                                            if (initYear == lastYear - 1 &&
+                                                initMounth == 12) {
+                                            } else {
+                                              initMounth++;
+                                              if (initMounth > 12) {
+                                                initMounth = 1;
+                                                initYear++;
+                                              }
+                                            }
+                                            controller.animateToPage(
+                                              (initYear - firstYear) * 12 +
+                                                  initMounth -
+                                                  1,
+                                              duration: const Duration(
+                                                  milliseconds: 400),
+                                              curve: Curves.easeInOut,
+                                            );
+                                          });
+                                        }),
+                                        child: Container(
+                                          height: 40,
+                                          width: 40,
+                                          color: Colors.transparent,
+                                          child: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  "Tháng $initMounth - $initYear",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17.5,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Spacer(),
-                                InkWell(
-                                  onTap: (() {
-                                    setState(() {
-                                      if (initYear == lastYear &&
-                                          initMounth == 12) {
-                                      } else {
-                                        initMounth++;
-                                        if (initMounth > 12) {
-                                          initMounth = 1;
-                                          initYear++;
-                                        }
-                                      }
-
-                                      // controller.animateToPage(
-                                      //   initMounth +
-                                      //       (initYear - firstYear) *
-                                      //           numberOfMounth,
-                                      //   duration:
-                                      //       const Duration(milliseconds: 300),
-                                      //   curve: Curves.easeInOut,
-                                      // );
-                                    });
-                                  }),
-                                  child: Container(
-                                    height: 40,
-                                    width: 40,
-                                    color: Colors.transparent,
-                                    child: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                )
+                              : const SizedBox.shrink(),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10, bottom: 7),
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: const [
@@ -372,49 +712,96 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                          Container(
-                            height: size.height * 0.38,
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: <Color>[
-                                  Color(0xFF173366),
-                                  Color(0xFF5872A7),
-                                  Color(0xFFA5B8Ec),
-                                ],
-                              ),
-                              border: Border(
-                                bottom: BorderSide.none,
-                              ),
-                            ),
-                            child: PageView(
-                              /// [PageView.scrollDirection] defaults to [Axis.horizontal].
-                              /// Use [Axis.vertical] to scroll vertically.
+                          check
+                              ? Container(
+                                  height: size.height * 0.39,
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: <Color>[
+                                        Color(0xFF173366),
+                                        Color(0xFF5872A7),
+                                        Color(0xFFA5B8Ec),
+                                      ],
+                                    ),
+                                    border: Border(
+                                      bottom: BorderSide.none,
+                                    ),
+                                  ),
+                                  child: PageView(
+                                    /// [PageView.scrollDirection] defaults to [Axis.horizontal].
+                                    /// Use [Axis.vertical] to scroll vertically.
 
-                              onPageChanged: (int index) {
-                                // log(index.toString());
-                                setState(() {
-                                  initMounth = index % 12 + 1;
-                                  initYear = index ~/ 12 + firstYear;
-                                  log(initMounth.toString());
-                                  log(initYear.toString());
-                                });
-                              },
-                              controller: controller,
-                              children: <Widget>[...listWidget()],
-                            ),
-                          ),
+                                    onPageChanged: (int index) {
+                                      // log("$index index");
+                                      setState(() {
+                                        initMounth = index % 12 + 1;
+                                        initYear = index ~/ 12 + firstYear;
+                                        log("$initMounth INIT MONTH");
+                                        log("$initYear INIT YEAR");
+                                      });
+                                    },
+                                    controller: controller,
+                                    children: <Widget>[...listWidget()],
+                                  ),
+                                )
+                              : Container(
+                                  height: size.height * 0.09,
+                                  decoration: const BoxDecoration(
+                                    // gradient: LinearGradient(
+                                    //   begin: Alignment.centerLeft,
+                                    //   end: Alignment.centerRight,
+                                    //   colors: <Color>[
+                                    //     Color(0xFF173366),
+                                    //     Color(0xFF5872A7),
+                                    //     Color(0xFFA5B8Ec),
+                                    //   ],
+                                    // ),
+                                    // color: Colors.green,
+                                    border: Border(
+                                      bottom: BorderSide.none,
+                                    ),
+                                  ),
+                                  child: PageView(
+                                    physics: const BouncingScrollPhysics(),
+                                    padEnds: false,
+                                    onPageChanged: (int index) {
+                                      log("$index index");
+                                      // setState(() {
+                                      //   initMounth = index % 12 + 1;
+                                      //   initYear = index ~/ 12 + firstYear;
+                                      //   log(initMounth.toString());
+                                      //   // log(initYear.toString());
+                                      // });
+                                    },
+                                    controller: controllerChild,
+                                    children: <Widget>[...listWidgetChild()],
+                                  ),
+                                ),
                           const Spacer(),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            // child: Image.asset(
-                            //   "assets/icons/up.png",
-                            //   height: 14,
-                            //   width: 14,
-                            //   color: Colors.white,
-                            // ),
-                            child: Icon(Icons.arrow_back),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                check = !check;
+                              });
+                            },
+                            child: SizedBox(
+                              width: 50,
+                              // color: Colors.red,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                child: Image.asset(
+                                  check
+                                      ? "assets/icons/up.png"
+                                      : "assets/icons/down.png",
+                                  height: 14,
+                                  width: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
