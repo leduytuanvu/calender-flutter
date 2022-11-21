@@ -281,22 +281,22 @@ Widget getCircle(int thu, int day, int month, int year) {
   } else if (year == realYear) {
     if (month > realMonth) {
     } else if (month < realMonth) {
-      check = true;
+      checkk = true;
     } else {
       if (day > realDay) {
       } else if (day < realDay) {
-        check = true;
+        checkk = true;
       } else {
-        check = true;
+        checkk = true;
       }
     }
   } else {
-    check = true;
+    checkk = true;
   }
   return Padding(
     padding: const EdgeInsets.all(10.0),
     child: Container(
-      decoration: check
+      decoration: checkk
           ? BoxDecoration(
               color: Colors.grey,
               borderRadius: BorderRadius.circular(100),
@@ -322,7 +322,6 @@ List<Widget> listWidgetChild() {
   int day = getDay(initMounth, initYear);
 
   int thu = 0;
-  if (initMounth < 10) {}
   final dateName = DateFormat('E').format(DateTime.parse(
       "$initYear-${initMounth < 10 ? '0$initMounth' : initMounth}-01"));
   switch (dateName.toLowerCase()) {
@@ -451,16 +450,18 @@ List<Widget> listWidget() {
   return list;
 }
 
+bool check = true;
 PageController controller = PageController();
 PageController controllerChild = PageController();
-bool check = true;
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    log("VO INIT");
     super.initState();
     controller = PageController(
         initialPage: (realYear - firstYear) * 12 + realMonth - 1);
+    log("${controller.initialPage} initiiiiiiiiiii");
   }
 
   @override
@@ -634,6 +635,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 )
                               : const SizedBox.shrink(),
+                          // List thu cn, th2, th3...
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 10),
                             child: Row(
@@ -730,44 +732,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   child: PageView(
-                                    /// [PageView.scrollDirection] defaults to [Axis.horizontal].
-                                    /// Use [Axis.vertical] to scroll vertically.
-
-                                    onPageChanged: (int index) {
-                                      // log("$index index");
+                                    controller: controller,
+                                    padEnds: false,
+                                    onPageChanged: (int indexx) {
+                                      log("$indexx index page view 2");
                                       setState(() {
-                                        initMounth = index % 12 + 1;
-                                        initYear = index ~/ 12 + firstYear;
+                                        initMounth = indexx % 12 + 1;
+                                        initYear = indexx ~/ 12 + firstYear;
                                         log("$initMounth INIT MONTH");
                                         log("$initYear INIT YEAR");
                                       });
                                     },
-                                    controller: controller,
                                     children: <Widget>[...listWidget()],
                                   ),
                                 )
                               : Container(
                                   height: size.height * 0.09,
                                   decoration: const BoxDecoration(
-                                    // gradient: LinearGradient(
-                                    //   begin: Alignment.centerLeft,
-                                    //   end: Alignment.centerRight,
-                                    //   colors: <Color>[
-                                    //     Color(0xFF173366),
-                                    //     Color(0xFF5872A7),
-                                    //     Color(0xFFA5B8Ec),
-                                    //   ],
-                                    // ),
-                                    // color: Colors.green,
                                     border: Border(
                                       bottom: BorderSide.none,
                                     ),
                                   ),
                                   child: PageView(
+                                    controller: controllerChild,
                                     physics: const BouncingScrollPhysics(),
                                     padEnds: false,
-                                    onPageChanged: (int index) {
-                                      log("$index index");
+                                    onPageChanged: (int indexxx) {
+                                      // log("$index index");
                                       // setState(() {
                                       //   initMounth = index % 12 + 1;
                                       //   initYear = index ~/ 12 + firstYear;
@@ -775,16 +766,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                       //   // log(initYear.toString());
                                       // });
                                     },
-                                    controller: controllerChild,
                                     children: <Widget>[...listWidgetChild()],
                                   ),
                                 ),
                           const Spacer(),
                           InkWell(
                             onTap: () {
+                              log("$initDay init day");
+                              log("$initMounth init month");
+                              log("$initYear init year");
                               setState(() {
+                                // controller = PageController(
+                                //     initialPage: (initYear - firstYear) * 12 +
+                                //         initMounth -
+                                //         1);
+
+                                // controller.animateToPage(
+                                //   (initYear - firstYear) * 12 + initMounth - 1,
+                                //   duration: const Duration(milliseconds: 400),
+                                //   curve: Curves.easeInOut,
+                                // );
+
                                 check = !check;
                               });
+                              log("${controller.initialPage} indexxxxx");
+                              log("${controllerChild.initialPage} indexxxxxchild");
                             },
                             child: SizedBox(
                               width: 50,
